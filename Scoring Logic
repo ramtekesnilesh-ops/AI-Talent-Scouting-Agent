@@ -1,0 +1,21 @@
+Match Score (70% Weight)
+Criteria:
+Skill match
+Role relevance
+Experience alignment
+Portfolio fit
+
+Formula:
+Match Score = 0–10
+
+Interest Score (30% Weight)
+Criteria:
+Response enthusiasm
+Active job search indicators
+Curiosity level
+Passive vs active intent
+Formula:
+Interest Score = 0–10
+
+Final Score Formula:
+Final Score = (Match Score × 0.7) + (Interest Score × 0.3)
