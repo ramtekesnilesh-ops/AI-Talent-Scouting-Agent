@@ -1,0 +1,199 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -304,
+        -224
+      ],
+      "id": "23e3af22-e67c-45ce-afb3-13874e7fdb6e",
+      "name": "When chat message received",
+      "webhookId": "3bb6e780-d5a3-4fd1-942b-72c185e6fc62"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "aafe01ba-b8b1-4abd-9b44-a5f2e642e4a6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "P2Ez0lQ5raDLDJIK",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        0
+      ],
+      "id": "af15e27d-9f4e-4769-843a-4f2e636f1488",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to create a draft email for candidates that have a high match score.",
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        0
+      ],
+      "id": "b72ba4e3-a075-46c4-922f-99774cebc460",
+      "name": "Create a draft in Gmail",
+      "webhookId": "5e6f6970-05b4-4b42-beb4-a4ff624c3178",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QAfSFjUGLJUjShrF",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to save candidate names, LinkedIn URLs, and match/Interest scores into the recruitment spreadsheet.",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1EAKbwmA81XXDvgcOoHfmoBmRbmwt-MidUiRomWj4vlo/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "New",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ee8173c5-4b5d-4278-af2d-de6216c8c61d",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zwsLDJImW0mtNqeu",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a Talent Scouting AI Agent.\n\nRules:\n1. If the user provides a job description → DO NOT ask again.\n2. Immediately process it.\n3. Extract role, skills, and experience.\n4. Match candidates and proceed with scoring.\n\nOnly ask for a job description if the message is empty or unrelated.\n\nImportant:\n- Never repeat the same question.\n- Assume the latest user message contains the job description unless clearly missing.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -224
+      ],
+      "id": "bb5c0805-011c-4e44-9f54-931e0c999014",
+      "name": "OpenAI Functions Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Functions Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "OpenAI Functions Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "OpenAI Functions Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenAI Functions Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "OpenAI Functions Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9edad036-e3d6-4b4a-8fe5-43df9f8ed2fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "699741069497dd7e28e1010474a594d736fd7c47b2751e321500fbd2753817e9"
+  },
+  "id": "cpEY7ID7bSZblTaY",
+  "tags": []
+}
