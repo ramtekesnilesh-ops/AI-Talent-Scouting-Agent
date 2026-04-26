@@ -26,4 +26,4 @@ Add candidate sheet
 Run
 Sample Output:
 
-Include screenshot of final ranked shortlist.# AI-Talent-Scouting-Agent
+Screenshot of final ranked shortlist.# AI-Talent-Scouting-Agent
